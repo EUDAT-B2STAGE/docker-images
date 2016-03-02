@@ -40,6 +40,9 @@ RUN wget -q $IRODSDEB \
 # # remove the certificates so they can't be used by mistake
 # RUN rm -rf /etc/grid-security/*
 
+# # Example for environment
+# http://j.mp/1RmGmWD
+
 ###############################
 # OTHERS?
 
