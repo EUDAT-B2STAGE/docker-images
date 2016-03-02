@@ -1,5 +1,5 @@
 ##########################################################################
-FROM cineca/icat
+FROM eudatb2safe/irods
 MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@cineca.it>"
 
 # ##########################################################################
