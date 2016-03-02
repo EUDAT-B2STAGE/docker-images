@@ -1,0 +1,19 @@
+
+sql:
+    image: postgres
+    environment:
+        POSTGRES_USER: irods
+        POSTGRES_PASSWORD: icatserver
+        POSTGRES_DB: ICAT
+
+irods:
+    image: eudatb2safe/b2safe
+    command: sleep infinity
+    hostname: rodserver
+    links:
+        - sql:db
+
+client:
+    image: eudatb2safe/apiserver
+    command: sleep infinity
+    working_dir: /root
