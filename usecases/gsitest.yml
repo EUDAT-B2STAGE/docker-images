@@ -1,5 +1,11 @@
 
 ######
+sharedvolume:
+    image: busybox
+    volumes:
+      - globusirods:/home/irods/.globus
+
+######
 sql:
     image: postgres
     environment:
@@ -13,6 +19,8 @@ irods:
     #image: eudatb2safe/b2safe
     command: sleep infinity
     hostname: rodserver
+    volumes_from:
+        - sharedvolume
     links:
         - sql:db
 
@@ -21,6 +29,8 @@ client:
     image: eudatb2safe/apiserver
     command: sleep infinity
     working_dir: /root
+    volumes_from:
+        - sharedvolume
     links:
         - irods:rodserver
 
