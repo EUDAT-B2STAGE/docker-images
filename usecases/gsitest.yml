@@ -1,4 +1,5 @@
 
+######
 sql:
     image: postgres
     environment:
@@ -6,6 +7,7 @@ sql:
         POSTGRES_PASSWORD: icatserver
         POSTGRES_DB: ICAT
 
+######
 irods:
     image: eudatb2safe/irods
     #image: eudatb2safe/b2safe
@@ -14,7 +16,12 @@ irods:
     links:
         - sql:db
 
+######
 client:
     image: eudatb2safe/apiserver
     command: sleep infinity
     working_dir: /root
+    links:
+        - icat:rodserver
+
+######
