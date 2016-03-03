@@ -117,3 +117,5 @@ ENV IRODS_HOST rodserver
 # if you need to add future commands after irods installation,
 # use the following
 ENV EXTRA_INSTALLATION_SCRIPT /extras
+
+ADD certificates_init.sh /init
