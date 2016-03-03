@@ -1,11 +1,5 @@
 
 ######
-sharedvolume:
-    image: busybox
-    volumes:
-      - globusirods:/home/irods/.globus
-
-######
 sql:
     image: postgres
     environment:
@@ -19,8 +13,8 @@ irods:
     #image: eudatb2safe/b2safe
     command: sleep infinity
     hostname: rodserver
-    volumes_from:
-        - sharedvolume
+    volumes:
+      - irodsuserhome:/home/irods
     links:
         - sql:db
 
@@ -28,9 +22,10 @@ irods:
 client:
     image: eudatb2safe/apiserver
     command: sleep infinity
+    hostname: flask
     working_dir: /root
     volumes_from:
-        - sharedvolume
+        - irods
     links:
         - irods:rodserver
 

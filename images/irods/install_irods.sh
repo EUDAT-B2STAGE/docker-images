@@ -12,18 +12,6 @@ yes $IRODS_PASS | sudo -S echo "Enabling priviledges"
 # Wait for sql init/creation
 sleep 7
 
-# ########################################################
-# Using the volume
-## Note: this should be removed when fixed the hack inside the dockerfile.
-echo "Fix missing files for volumes"
-sudo cp copy/etcirods/* $p2/
-
-#########################################################
-# Note: using docker volumes, it requires a permission fix, until:
-#https://github.com/docker/docker/issues/7198
-echo "Fixing permissions"
-sudo chown -R $UID:$GROUPS $p1 $p2
-
 #########################################################
 # Connect server to DB and init
 echo "Configure & connect"
@@ -37,7 +25,7 @@ else
     echo "Failed to install irods..."
     exit 1
 fi
-echo "Fixing permissions again"
+echo "Fixing permissions "
 sudo chown -R $UID:$GROUPS $p1 $p2 $p3
 
 #########################################################

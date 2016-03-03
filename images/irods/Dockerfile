@@ -6,6 +6,7 @@ MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@cineca.it>"
 # Base setup and Install dependencies
 ENV DEBIAN_FRONTEND "noninteractive"
 
+# Use apt to install base applications
 RUN apt-get update -qq && \
     apt-get install -y \
     # base utils
@@ -14,9 +15,9 @@ RUN apt-get update -qq && \
     && apt-get clean autoclean && apt-get autoremove -y && \
     rm -rf /var/lib/cache /var/lib/log
 
+# Add all of the irods/globus/gsi dependencies
 ENV GLOBUSFTP http://toolkit.globus.org/ftppub/gt6/installers
 ENV GLOBUSGSIDEB $GLOBUSFTP/repo/globus-toolkit-repo_latest_all.deb
-
 RUN wget -q $GLOBUSGSIDEB && dpkg -i globus-*repo*.deb && \
     apt-get update -qq && \
     apt-get install -y \
@@ -69,15 +70,26 @@ RUN adduser $IRODS_USER sudo
 USER $IRODS_USER
 
 ##########################################################################
-## How it should be...
+
+# Install irods packages
+RUN yes $IRODS_PASS | sudo -S dpkg -i irods*.deb
+
 # Saving configuration files for persistence on irods modifications
-#VOLUME /etc/irods
+VOLUME /etc/irods
 
 ## The bad hack. Change it in future docker releases,
 ## when volumes mapping would probably be available and easy
-RUN yes $IRODS_PASS | sudo -S dpkg -i irods*.deb
-# Installed, so enable persistence
-RUN mkdir copy && rsync -av /etc/irods/ copy/etcirods/
+#RUN mkdir copy && rsync -av /etc/irods/ copy/etcirods/
+### IMPORTANT
+# Must check if this above can be changed/removed now
+### IMPORTANT
+
+###############################
+## Very important docker hack
+# Ensure that irods user certificates can be shared as a volume
+VOLUME /home/$IRODS_USER
+RUN yes $IRODS_PASS | sudo -S chown -R $IRODS_USER:$IRODS_USER /home/$IRODS_USER
+###############################
 
 ##########################################################################
 # THE INIT PHASE IS NECESSARY OUTSIDE OF THE DOCKERFILE
@@ -101,6 +113,7 @@ ENV TERM xterm
 WORKDIR /home/$IRODS_USER
 EXPOSE 1247
 ENV IRODS_HOST rodserver
+
 # if you need to add future commands after irods installation,
 # use the following
 ENV EXTRA_INSTALLATION_SCRIPT /extras
