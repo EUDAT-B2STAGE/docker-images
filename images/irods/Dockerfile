@@ -47,7 +47,7 @@ ENV IRODSRELEASES "$IRODSFTP/releases/$IRODSVERSION/ubuntu14"
 RUN wget -q $IRODSRELEASES/irods-icat-${IRODSVERSION}-ubuntu14-x86_64.deb
 RUN wget -q $IRODSRELEASES/irods-database-plugin-postgres-1.8-ubuntu14-x86_64.deb
 ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/1.2"
-ENV IRODSGSI_DEB /opt/gsi.deb
+ENV IRODSGSI_DEB /tmp/gsi.deb
 RUN wget -q $IRODSGSI/irods-auth-plugin-gsi-1.2-ubuntu14-x86_64.deb -O $IRODSGSI_DEB
 
 
@@ -67,6 +67,11 @@ ENV IRODS_PASS "icatserver"
 RUN useradd -ms /bin/bash $IRODS_USER
 RUN yes $IRODS_PASS | passwd $IRODS_USER
 RUN adduser $IRODS_USER sudo
+
+# guest for testing certificates
+ENV GSI_USER guest
+RUN useradd -ms /bin/bash $GSI_USER
+
 USER $IRODS_USER
 
 ##########################################################################

@@ -34,7 +34,6 @@ sudo chown -R $UID:$GROUPS $p1 $p2 $p3
 # This plugin requires db already initialized and connected.
 # For this reason it cannot be used at image building
 sudo -S dpkg -i $IRODSGSI_DEB
-sudo rm $IRODSGSI_DEB
 echo "Installed GSI"
 
 #########################################################
@@ -51,3 +50,5 @@ else
 	fi
     echo "Connected"
 fi
+
+sudo rm -rf /tmp/*
