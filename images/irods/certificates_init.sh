@@ -10,12 +10,22 @@ yes $IRODS_PASS | sudo -S /etc/init.d/irods start
 # More info on this guide:
 # http://toolkit.globus.org/toolkit/docs/latest-stable/simpleca/admin/#simpleca-admin-installing
 
+# It should be changed to EXPECT
+answers="/tmp/answers"
+echo "y" > $answers
+echo "irods@rodserver" >> $answers
+echo "99999" >> $answers
+echo $IRODS_PASS >> $answers
+echo $IRODS_PASS >> $answers
+
 # create authority
-grid-ca-create
-# Note: you MUST specify a passphrase (e.g. 'paolo')
+grid-ca-create < $answers
 
 # create certificate for user
-grid-cert-request -nopw
+grid-cert-request -nopw << EOF
+guest
+EOF
+
 # I reply with a user 'paulie'
 
 # Note: the certificate is created inside the shared volume
@@ -23,4 +33,8 @@ grid-cert-request -nopw
 
 # sign the certificate
 cd .globus/
-grid-ca-sign -in usercert_request.pem -out usercert.pem
+echo $IRODS_PASS > $answers
+grid-ca-sign -in usercert_request.pem -out usercert.pem < $answers
+
+# clean answers
+rm $answers

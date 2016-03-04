@@ -12,6 +12,12 @@ See related issue [#1](https://github.com/EUDAT-B2STAGE/docker-images/issues/1)
 ```bash
 
 ################################
+## In case you want to clean everything
+# WARNING - YOU WILL LOOSE EVERY DOCKER DATA YOU HAVE
+$ docker rm -f $(docker ps -a -q);
+$ docker volume rm $(docker volume ls -q)
+
+################################
 ## Launch and check the stack
 $ docker-compose -f gsitest.yml up -d
 $ docker-compose -f gsitest.yml ps
