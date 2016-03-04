@@ -35,16 +35,24 @@ WORKDIR /tmp
 RUN wget -q $IRODSDEB \
     && dpkg -i irods*.deb \
     && rm *.deb
-
-### SHOULD ASK TO AMY IF REALLY NECESSARY
-# # remove the certificates so they can't be used by mistake
-# RUN rm -rf /etc/grid-security/*
-
 # # Example for environment
 # http://j.mp/1RmGmWD
 
 ###############################
-# OTHERS?
+## ADD USERS
 
+# irods
+ENV IRODS_USER irods
+RUN useradd -ms /bin/bash $IRODS_USER
+# guest for testing certificates
+ENV GSI_USER guest
+RUN useradd -ms /bin/bash $GSI_USER
+
+###############################
+## OTHERS SERVICES?
+
+# empty for now
+
+###############################
 RUN echo "echo 'Run Flask server with the command:'" >> /root/.bashrc
 RUN echo "echo './boot devel'" >> /root/.bashrc

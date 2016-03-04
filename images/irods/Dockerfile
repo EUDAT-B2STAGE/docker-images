@@ -72,55 +72,39 @@ RUN adduser $IRODS_USER sudo
 ENV GSI_USER guest
 RUN useradd -ms /bin/bash $GSI_USER
 
-USER $IRODS_USER
-
 ##########################################################################
 
 # Install irods packages
-RUN yes $IRODS_PASS | sudo -S dpkg -i irods*.deb
-
+RUN dpkg -i irods*.deb
 # Saving configuration files for persistence on irods modifications
 VOLUME /etc/irods
-
-## The bad hack. Change it in future docker releases,
-## when volumes mapping would probably be available and easy
-#RUN mkdir copy && rsync -av /etc/irods/ copy/etcirods/
-### IMPORTANT
-# Must check if this above can be changed/removed now
-### IMPORTANT
-
-###############################
-## Very important docker hack
-# Ensure that irods user certificates can be shared as a volume
-VOLUME /home/$IRODS_USER
-RUN yes $IRODS_PASS | sudo -S chown -R $IRODS_USER:$IRODS_USER /home/$IRODS_USER
-###############################
 
 ##########################################################################
 # THE INIT PHASE IS NECESSARY OUTSIDE OF THE DOCKERFILE
 #
-# How to do it?
-# Install irods + connect to postgres. Then run the following setup script:
-#   sudo /var/lib/irods/packaging/setup_irods.sh
+# How to:
+# Install irods + connect to postgres.
+# Then run the following setup script:
+# $ sudo /var/lib/irods/packaging/setup_irods.sh
 
 ##########################################################################
-# Should it also create a resource Server ?
-# https://docs.irods.org/4.1.5/manual/installation/#resource-server
+## Closing operations
 
-# ##########################################################################
-# # # install simple CA
-# # RUN echo -e "$GSI_NEWUSER_NAME" | grid-cert-request -nopw
-# # RUN yes | sudo grid-ca-sign -in /home/$IRODS_USER/.globus/usercert_request.pem -out /home/$IRODS_USER/.globus/usercert.pem
+# add environment for guest
+WORKDIR /home/$GSI_USER
+ADD guest.irods.env.json .irods/irods_environment.json
+RUN chown -R $GSI_USER:$GSI_USER /home/$GSI_USER/.irods
 
-##########################################################################
-# Closing operations
-ENV TERM xterm
-WORKDIR /home/$IRODS_USER
-EXPOSE 1247
+# irods user setup
 ENV IRODS_HOST rodserver
+ADD certificates_init.sh /init
+EXPOSE 1247
 
+# various
+ENV TERM xterm
 # if you need to add future commands after irods installation,
 # use the following
 ENV EXTRA_INSTALLATION_SCRIPT /extras
 
-ADD certificates_init.sh /init
+USER $IRODS_USER
+WORKDIR /home/$IRODS_USER
