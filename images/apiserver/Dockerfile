@@ -25,9 +25,10 @@ RUN apt-get update -qq && \
 
 # Environments
 ENV IRODSVERSION 4.1.8
-ENV IRODSFTP "ftp://ftp.renci.org/pub/irods/releases/$IRODSVERSION/ubuntu14"
+ENV IRODSFTP "ftp://ftp.renci.org/pub/irods"
+ENV IRODSRELEASES "$IRODSFTP/releases/$IRODSVERSION/ubuntu14"
 ENV IRODSPKG "icommands"
-ENV IRODSDEB $IRODSFTP/irods-${IRODSPKG}-${IRODSVERSION}-ubuntu14-x86_64.deb
+ENV IRODSDEB $IRODSRELEASES/irods-${IRODSPKG}-${IRODSVERSION}-ubuntu14-x86_64.deb
 
 # Icommands
 WORKDIR /tmp
@@ -37,6 +38,16 @@ RUN wget -q $IRODSDEB \
     && rm *.deb
 # # Example for environment
 # http://j.mp/1RmGmWD
+
+###############################
+## Fix the gsi missing library.
+# (Error: errno [] -- message [shared library does not exist [/var/lib/irods/plugins/auth/libgsi.so]])
+
+ENV GSIVERSION "1.2"
+ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/$GSIVERSION"
+RUN wget $IRODSGSI/irods-auth-plugin-gsi-${GSIVERSION}-ubuntu14-x86_64.deb \
+    && ar vx irods-auth*.deb \
+    && tar xf data.tar.xz -C / && rm -rf *
 
 ###############################
 ## ADD USERS

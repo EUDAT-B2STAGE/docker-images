@@ -32,11 +32,9 @@ $ docker exec -it usecases_irods_1 bash
 irods@rodserver:~$ /init
 
 ################################
-## Open the flask server
-$ docker exec -it usecases_client_1 bash
-
-# It should already work
-root@flask:~$ su - guest
+## Open the client side
+docker exec -it usecases_client_1 su - guest
 guest@flask:~$ ils
+/tempZone/home/guest:
 
 ```

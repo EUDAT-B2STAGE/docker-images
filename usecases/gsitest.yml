@@ -16,8 +16,6 @@ irods:
     volumes:
       - guestuserhome:/home/guest
       - gsicerts:/etc/grid-security/certificates
-# CAN THIS BE REMOVED?
-      - gsilib:/var/lib/irods/plugins/auth
     links:
         - sql:db
 
