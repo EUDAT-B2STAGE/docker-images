@@ -6,19 +6,17 @@
 yes $IRODS_PASS | sudo -S /etc/init.d/irods start
 
 ################################
+## Fix volume permissions for irods/gsi
+sudo chown $IRODS_USER:$IRODS_USER -R /etc/grid-security
+
+################################
 ## Create and sign a user certificate on the iRODS server side
-# More info on this guide:
-# http://toolkit.globus.org/toolkit/docs/latest-stable/simpleca/admin/#simpleca-admin-installing
 
-## CREATE AUTHORITY?
-## there should be already one, actually
-## check it with:
+## Authority: there should be already one, see:
 # grid-default-ca
-## Other wise you should with something like
-# grid-ca-create < $answers
 
-echo "$GSI_USER" > /tmp/answers         # create answer
 # create certificate for user guest
+echo "$GSI_USER" > /tmp/answers
 sudo su $GSI_USER -c "grid-cert-request -nopw < /tmp/answers"
 # sign the certificate
 certdir="/home/$GSI_USER/.globus"
