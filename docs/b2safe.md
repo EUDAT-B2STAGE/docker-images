@@ -6,6 +6,16 @@ These are the instructions for emulating the [B2SAFE EUDAT service](http://www.e
 
 You need to install [docker-engine](https://docs.docker.com/engine/installation/) `v 1.9+` and [docker-compose](https://docs.docker.com/compose/install/) `v 1.5+`
 
+```bash
+# Create a directory for your project
+cd ~
+mkdir usecase
+cd usecases
+
+# Download the b2safe docker stack configuration
+wget https://raw.githubusercontent.com/EUDAT-B2STAGE/docker-images/master/usecases/b2safe.yml
+```
+
 ## Initialization
 
 This phase is necessary only the very first time you prepare the service environment
