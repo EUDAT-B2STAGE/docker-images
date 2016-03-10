@@ -1,0 +1,28 @@
+
+conf:
+    image: busybox
+    environment:
+      POSTGRES_PASSWORD: icatserver
+
+sql:
+    extends:
+        service: conf
+    image: postgres
+    environment:
+        POSTGRES_USER: irods
+        POSTGRES_DB: ICAT
+
+b2safe:
+    extends:
+        service: conf
+    image: eudatb2safe/b2safe
+    command: /bootup
+    hostname: rodserver
+    volumes:
+      - irodshome:/home/irods
+      - irodsresc:/opt/irods_res
+      - eudathome:/opt/eudat
+    links:
+        - sql:db
+    ports:
+        - 1427:1427
