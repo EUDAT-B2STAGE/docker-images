@@ -1,0 +1,7 @@
+site_name: EUDAT w/ Docker
+pages:
+- Introduction: index.md
+- B2SAFE service: b2safe.md
+- GSI testing: gsi.md
+- HTTP API: api.md
+theme: journal
