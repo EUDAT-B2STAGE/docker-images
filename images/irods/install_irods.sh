@@ -9,7 +9,13 @@ cd /tmp
 
 ########################################################
 yes $IRODS_PASS | sudo -S echo "Enabling priviledges"
+
+# Handle password for user/db
+/pass
+source /etc/environment
+
 # Wait for sql init/creation
+echo "Waiting for postgres db to be ready..."
 sleep 7
 
 #########################################################

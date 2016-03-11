@@ -95,6 +95,9 @@ WORKDIR /home/$GSI_USER
 ADD guest.irods.env.json .irods/irods_environment.json
 RUN chown -R $GSI_USER:$GSI_USER /home/$GSI_USER/.irods
 
+# passwd handling
+ADD handlepassw.sh /pass
+
 # irods user setup
 ENV IRODS_HOST rodserver
 ADD certificates_init.sh /init

@@ -2,7 +2,7 @@
 conf:
     image: busybox
     environment:
-      POSTGRES_PASSWORD: icatserver
+      POSTGRES_PASSWORD: test
 
 sql:
     extends:
@@ -15,7 +15,8 @@ sql:
 b2safe:
     extends:
         service: conf
-    image: eudatb2safe/b2safe
+    image: eudatb2safe/irods
+    #image: eudatb2safe/b2safe
     command: /bootup
     hostname: rodserver
     volumes:
