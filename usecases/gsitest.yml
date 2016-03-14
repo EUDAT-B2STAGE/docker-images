@@ -10,14 +10,13 @@ sql:
 ######
 irods:
     image: eudatb2safe/irods
-    #image: eudatb2safe/b2safe
     command: sleep infinity
     hostname: rodserver
     volumes:
-      - guestuserhome:/home/guest
-      - gsicerts:/etc/grid-security/certificates
+      - gsi_guestuserhome:/home/guest
+      - gsi_certs:/etc/grid-security
     links:
-        - sql:db
+      - sql:db
 
 ######
 client:
@@ -26,8 +25,8 @@ client:
     hostname: flask
     working_dir: /root
     volumes_from:
-        - irods
+      - irods
     links:
-        - irods:rodserver
+      - irods:rodserver
 
 ######
