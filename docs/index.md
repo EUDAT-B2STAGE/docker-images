@@ -9,3 +9,10 @@ is a stack of one or more Docker container.
 ## About
 
 This work has been originally developed for writing the new B2SAFE HTTP API endpoints.
+
+<!--
+### Hidden notes
+
+A mac and linux GUI for irods
+http://irods.org/2015/10/native-gui-access-to-irods-on-a-mac-or-linux-desktop/
+-->
