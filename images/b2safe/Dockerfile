@@ -33,18 +33,18 @@ RUN apt-get update && apt-get install -y \
 USER $IRODS_USER
 RUN cd /tmp && git clone https://github.com/EUDAT-B2SAFE/B2SAFE-core
 WORKDIR /tmp/B2SAFE-core/packaging
+# move the deb position to tmp dir
+RUN sed -i "8s/\${HOME}/\/tmp/" create_deb_package.sh
 RUN ./create_deb_package.sh
-# Move from home dir, which will become a volume and clean everything
-RUN mv /home/$IRODS_USER/debbuild/irods* /tmp/
-# Inside the first time install script we must install the package
 
 # ##########################################################################
-# Prepare install script
+#  Prepare install script
 ENV EUDAT_CONFIGF /tmp/eudat.conf
 ADD myeudat.conf $EUDAT_CONFIGF
 ADD install_eudat.sh $EXTRA_INSTALLATION_SCRIPT
+
+# Save resources and eudat configurations
+VOLUME /opt
+
 # Go home
 WORKDIR /home/$IRODS_USER
-
-# # Save resources and eudat configurations?
-# VOLUME /opt

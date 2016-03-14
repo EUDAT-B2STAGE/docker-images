@@ -17,7 +17,7 @@ iadmin mkresc $REPLICARES unixfilesystem $IRODS_HOST:$REPLICA_DIR
 sed -i "4s/demoResc/$MAINRES/" ~/.irods/irods_environment.json
 sed -i "15s/demoResc/$MAINRES/" /etc/irods/server_config.json
 
-# TO DO 
+# TO DO
 
 ## source:http://irods.org/post/configuring-irods-for-high-availability/#.VktEE98veGg
 # iadmin mkresc BaseResource replication
@@ -31,12 +31,15 @@ sed -i "15s/demoResc/$MAINRES/" /etc/irods/server_config.json
 ## B2SAFE SERVICE
 
 # Install package
-yes $IRODS_PASS | sudo -S dpkg -i /tmp/irods*.deb
+yes $IRODS_PASS | sudo -S dpkg -i /tmp/debbuild/irods*.deb
 echo "Install successful. Ready to configure."
 
 # Configure
-cd /opt/eudat/b2safe/packaging  
+sudo chown -R $UID:$GROUPS /opt/*
+cd /opt/eudat/b2safe/packaging
 source $HANDLECONF
+
+# This will change dynamic parameters
 keytochange='CHANGEME'
 sudo chown $UID $EUDAT_CONFIGF
 sed -i "14s/$keytochange/$MAINRES/" $EUDAT_CONFIGF

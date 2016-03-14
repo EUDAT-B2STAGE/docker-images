@@ -2,12 +2,13 @@
 conf:
     image: busybox
     environment:
-      POSTGRES_PASSWORD: test
+      POSTGRES_PASSWORD: mysecretpassword
 
 sql:
     extends:
         service: conf
     image: postgres
+    hostname: psql
     volumes:
         - b2safe_pgsqldata:/var/lib/postgresql/data
     environment:
@@ -17,15 +18,13 @@ sql:
 b2safe:
     extends:
         service: conf
-    image: eudatb2safe/irods
-#    image: eudatb2safe/b2safe
+    image: eudatb2safe/b2safe
     command: /bootup
-#    command: sleep 123456789
     hostname: rodserver
     volumes:
       - b2safe_etc:/etc
       - b2safe_irodshome:/home/irods
-#      - b2safe_opt:/opt
+      - b2safe_opt:/opt
     links:
         - sql:db
     ports:
