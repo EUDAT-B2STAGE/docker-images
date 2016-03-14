@@ -1,4 +1,5 @@
 #!/bin/bash
+
 if [ -z "$1" ]; then
     echo "Usage $0 SCRIPT_NAME"
     exit 1
@@ -8,9 +9,9 @@ fi
 SCRIPT=$1
 rm -rf $SCRIPT && touch $SCRIPT
 # account
-echo "irods" >> $SCRIPT
+echo "$IRODS_USER" >> $SCRIPT
 # group
-echo "irods" >> $SCRIPT
+echo "$IRODS_USER" >> $SCRIPT
 # zone
 echo "tempZone" >> $SCRIPT
 # port

@@ -76,8 +76,9 @@ RUN useradd -ms /bin/bash $GSI_USER
 
 # Install irods packages
 RUN dpkg -i irods*.deb
-# Saving configuration files for persistence on irods modifications
-VOLUME /etc/irods
+# Saving configurations files/passw/environments for persistence on irods modifications
+VOLUME /etc
+#VOLUME /etc/irods
 
 ##########################################################################
 # THE INIT PHASE IS NECESSARY OUTSIDE OF THE DOCKERFILE
@@ -109,5 +110,7 @@ ENV TERM xterm
 # use the following
 ENV EXTRA_INSTALLATION_SCRIPT /extras
 
+# Become irods admin
+VOLUME /home/$IRODS_USER
 USER $IRODS_USER
 WORKDIR /home/$IRODS_USER

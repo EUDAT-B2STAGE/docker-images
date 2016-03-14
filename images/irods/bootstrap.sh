@@ -1,11 +1,15 @@
 #!/bin/bash
 
+##########################################
+## BOOT UP
+source ~/.bashrc
+
 # Enable sudo withouth password
 yes $IRODS_PASS | sudo -S echo "privilege"
-# Remove tmp
-sudo rm -rf /tmp/*
-# Fix permissions
-sudo chown $UID:$GROUPS -R /var/lib/irods
+
+# Fix permissions, just to be sure
+sudo chown -R $UID:$GROUPS /var/lib/$IRODS_USER
+
 # Start irods
 sudo /etc/init.d/irods start
 if [ "$?" == "0" ]; then
@@ -16,3 +20,5 @@ else
     echo "Error launching irods..."
     exit 1
 fi
+
+##########################################
