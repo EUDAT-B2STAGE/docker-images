@@ -45,9 +45,20 @@ RUN wget -q $IRODSDEB \
 
 ENV GSIVERSION "1.2"
 ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/$GSIVERSION"
+# ENV SLIBS /sharedlibs
+# RUN mkdir $SLIBS
 RUN wget $IRODSGSI/irods-auth-plugin-gsi-${GSIVERSION}-ubuntu14-x86_64.deb \
     && ar vx irods-auth*.deb \
-    && tar xf data.tar.xz -C / && rm -rf *
+    && tar xf data.tar.xz -C / \
+    && rm -rf *
+
+## A PAST SOLUTION
+# # Use ldconfig to apply this lib to the system
+# #http://codeyarns.com/2014/01/14/how-to-add-library-directory-to-ldconfig-cache/
+
+# RUN echo "# irods gsi libs\n$SLIBS/var/lib/irods/plugins/auth" \
+#     > /etc/ld.so.conf.d/irods.conf \
+#     && /sbin/ldconfig
 
 ###############################
 ## ADD USERS
@@ -65,5 +76,7 @@ RUN useradd -ms /bin/bash $GSI_USER
 # empty for now
 
 ###############################
-RUN echo "echo 'Run Flask server with the command:'" >> /root/.bashrc
-RUN echo "echo './boot devel'" >> /root/.bashrc
+# Go online as the same irods user
+RUN echo "echo 'Run Flask server with the command:'\necho './boot devel'" \
+    >> /home/$IRODS_USER/.bashrc
+USER $IRODS_USER

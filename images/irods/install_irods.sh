@@ -74,5 +74,22 @@ else
     echo "Connected"
 fi
 
+#########################################################
+# #CERTIFICATES#
+certdir="/opt/certificates"
+mkdir -p $certdir
+
+# Copy current certification authority for other containers
+cadir="$certdir/caauth"
+sudo rm -rf $cadir && rsync -avq /etc/grid-security/certificates/ $cadir
+echo "Saved auth for outside containers"
+
+# Add a guest user for GSI certificates
+rm -rf /opt/certificates/$GSI_USER && /addusercert $GSI_USER
+
+# Fix permissions?
+sudo chown -R $UID:$GROUPS $certdir
+
+#########################################################
 # Remove tmp
 sudo rm -rf /tmp/*

@@ -76,9 +76,11 @@ RUN useradd -ms /bin/bash $GSI_USER
 
 # Install irods packages
 RUN dpkg -i irods*.deb
+
 # Saving configurations files/passw/environments for persistence on irods modifications
 VOLUME /etc
-#VOLUME /etc/irods
+# VOLUME /etc/irods
+# VOLUME /etc/grid-security
 
 ##########################################################################
 # THE INIT PHASE IS NECESSARY OUTSIDE OF THE DOCKERFILE
@@ -104,14 +106,17 @@ ENV IRODS_HOST rodserver
 ADD certificates_init.sh /init
 EXPOSE 1247
 
-# various
+# Various
 ENV TERM xterm
 # if you need to add future commands after irods installation,
 # use the following
 ENV EXTRA_INSTALLATION_SCRIPT /extras
-
-# Become irods admin
+# volumes
 VOLUME /home/$IRODS_USER
 VOLUME /var/lib/$IRODS_USER
+
+# Become irods admin
 USER $IRODS_USER
 WORKDIR /home/$IRODS_USER
+
+ADD new_authority.sh /addusercert
