@@ -71,9 +71,10 @@ ENV GSI_USER guest
 RUN useradd -ms /bin/bash $GSI_USER
 
 ###############################
-## OTHERS SERVICES?
+## OTHERS SERVICES
 
-# empty for now
+# Nose for tests
+pip install --upgrade nose
 
 ###############################
 # Go online as the same irods user
