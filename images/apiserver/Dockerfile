@@ -1,6 +1,6 @@
 
 FROM pdonorio/py3api
-MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@gmail.it>"
+MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@cineca.it>"
 
 ENV GLOBUSFTP http://toolkit.globus.org/ftppub/gt6/installers
 ENV GLOBUSGSIDEB $GLOBUSFTP/repo/globus-toolkit-repo_latest_all.deb
@@ -14,7 +14,7 @@ RUN apt-get update -qq && \
     libfuse2 \
     # globus and grid-ftp utils
     globus-proxy-utils globus-simple-ca \
-    # CLEAN \
+    # CLEAN
     && apt-get clean autoclean && apt-get autoremove -y && \
     rm -rf /var/lib/cache /var/lib/log
 
@@ -73,8 +73,7 @@ RUN useradd -ms /bin/bash $GSI_USER
 ###############################
 ## OTHERS SERVICES
 
-# Nose for tests
-pip install --upgrade nose
+# Nothing for now
 
 ###############################
 # Go online as the same irods user
