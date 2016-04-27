@@ -20,6 +20,11 @@ $ pwd
 /opt/b2safe_docker
 ```
 
+## The service
+
+For more information on the Deployment of the B2SAFE service, 
+please refer to the [project official wiki](https://github.com/EUDAT-B2SAFE/B2SAFE-core/wiki).
+
 ## Customization
 
 The YAML file `b2safe.yml`, downloaded in the previous command,
