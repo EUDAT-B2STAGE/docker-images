@@ -12,6 +12,8 @@ RUN apt-get update -qq && \
     nano vim \
     # needed by icommands
     libfuse2 \
+    # requested for openssl in python
+    libffi-dev \
     # globus and grid-ftp utils
     globus-proxy-utils globus-simple-ca \
     # CLEAN
@@ -19,6 +21,8 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/cache /var/lib/log
 
 # ADD services which are not so common
+RUN pip3 install --upgrade \
+    pyopenssl flask-oauthlib
 
 ###############################
 # IRODS
