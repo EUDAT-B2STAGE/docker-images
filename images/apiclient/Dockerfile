@@ -15,4 +15,4 @@ RUN wget $EASY_REPO --no-check-certificate -O - | python3
 # Install pip and pip packages
 RUN easy_install pip \
     && pip --no-cache-dir install --upgrade \
-    httpie
+    httpie http-prompt
