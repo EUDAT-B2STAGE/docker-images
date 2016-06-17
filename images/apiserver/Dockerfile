@@ -81,6 +81,6 @@ RUN useradd -ms /bin/bash $GSI_USER
 
 ###############################
 # Go online as the same irods user
-RUN echo "echo 'Run Flask server with the command:'\necho './boot devel'" \
+RUN echo "echo 'Run Flask server with the command:'\necho '$ ./boot devel'\necho ''\necho 'Run only basic tests with $ nose2 -F test.base'\necho 'or custom with $ nose2 -F test.custom'" \
     >> /home/$IRODS_USER/.bashrc
 USER $IRODS_USER
