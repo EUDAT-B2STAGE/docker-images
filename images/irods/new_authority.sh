@@ -37,10 +37,10 @@ certin="$certdir/usercert_request.pem"
 certout="$certdir/usercert.pem"
 sudo nohup grid-ca-sign -in $certin -out $certout
 out=`ls $certout`
+status="$?"
 clear
 echo ""
-echo ""
-if [ "$?" == "0" ]; then
+if [ "$status" == "0" ]; then
     echo "Created a valid signed certificate: $certout"
 else
     echo "Failed to create the certificate:"

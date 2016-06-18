@@ -88,6 +88,8 @@ fi
 
 # Add a guest user for GSI certificates
 rm -rf /opt/certificates/$GSI_USER && /addusercert $GSI_USER
+rm -rf /opt/certificates/$GSI_ADMIN \
+    && /addusercert $GSI_ADMIN && iadmin moduser $GSI_ADMIN type rodsadmin
 
 # Fix permissions?
 sudo chown -R $UID:$GROUPS $certdir

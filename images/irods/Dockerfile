@@ -71,6 +71,9 @@ RUN adduser $IRODS_USER sudo
 # guest for testing certificates
 ENV GSI_USER guest
 RUN useradd -ms /bin/bash $GSI_USER
+# rodsminer for administration with GSI auth
+ENV GSI_ADMIN rodsminer
+RUN useradd -ms /bin/bash $GSI_ADMIN
 
 ##########################################################################
 
@@ -115,7 +118,7 @@ ENV EXTRA_INSTALLATION_SCRIPT /extras
 VOLUME /home/$IRODS_USER
 VOLUME /var/lib/$IRODS_USER
 
-# Become irods admin
+# Become irods main user
 USER $IRODS_USER
 WORKDIR /home/$IRODS_USER
 
