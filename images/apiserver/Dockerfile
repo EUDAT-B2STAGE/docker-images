@@ -73,6 +73,9 @@ RUN useradd -ms /bin/bash $IRODS_USER
 # guest for testing certificates
 ENV GSI_USER guest
 RUN useradd -ms /bin/bash $GSI_USER
+# rodsminer for administration with GSI auth
+ENV GSI_ADMIN rodsminer
+RUN useradd -ms /bin/bash $GSI_ADMIN
 
 ###############################
 ## OTHERS SERVICES
