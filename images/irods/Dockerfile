@@ -1,5 +1,5 @@
 ##########################################################################
-FROM ubuntu:15.10
+FROM ubuntu:16.04
 MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@cineca.it>"
 
 ##########################################################################
@@ -41,15 +41,20 @@ RUN wget -q $GLOBUSGSIDEB && dpkg -i globus-*repo*.deb && \
 # IRODS icat server
 # install instructions: https://docs.irods.org/4.1.5/manual/installation
 WORKDIR /tmp
-ENV IRODSVERSION 4.1.8
+ENV IRODS4VERSION 1.9
+ENV IRODSVERSION 4.$IRODS4VERSION
+# note: there is no releases for ubuntu 16 at the moment...?
+ENV OSVERSION ubuntu14
+# ENV OSVERSION ubuntu16
 ENV IRODSFTP "ftp://ftp.renci.org/pub/irods"
 ENV IRODSRELEASES "$IRODSFTP/releases/$IRODSVERSION/ubuntu14"
-RUN wget -q $IRODSRELEASES/irods-icat-${IRODSVERSION}-ubuntu14-x86_64.deb
-RUN wget -q $IRODSRELEASES/irods-database-plugin-postgres-1.8-ubuntu14-x86_64.deb
-ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/1.2"
-ENV IRODSGSI_DEB /tmp/gsi.deb
-RUN wget -q $IRODSGSI/irods-auth-plugin-gsi-1.2-ubuntu14-x86_64.deb -O $IRODSGSI_DEB
 
+RUN wget -q $IRODSRELEASES/irods-icat-${IRODSVERSION}-${OSVERSION}-x86_64.deb
+RUN wget -q $IRODSRELEASES/irods-database-plugin-postgres-${IRODS4VERSION}-${OSVERSION}-x86_64.deb
+ENV GSIVERSION 1.2
+ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/${GSIVERSION}"
+ENV IRODSGSI_DEB /tmp/gsi.deb
+RUN wget -q $IRODSGSI/irods-auth-plugin-gsi-${GSIVERSION}-${OSVERSION}-x86_64.deb -O $IRODSGSI_DEB
 
 ##########################################################################
 # install scripts
@@ -84,6 +89,9 @@ RUN dpkg -i irods*.deb
 VOLUME /etc
 # VOLUME /etc/irods
 # VOLUME /etc/grid-security
+
+# Remove irods remote validation
+RUN sed -i '36s/https[^\"]\+/off/' /etc/irods/server_config.json
 
 ##########################################################################
 # THE INIT PHASE IS NECESSARY OUTSIDE OF THE DOCKERFILE
