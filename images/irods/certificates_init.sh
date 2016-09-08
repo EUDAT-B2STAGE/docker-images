@@ -2,38 +2,55 @@
 
 # Install irods&friends
 /install
-# Launch irods after install
-yes $IRODS_PASS | sudo -S /etc/init.d/irods start
 
-################################
-## Fix volume permissions for irods/gsi
-sudo chown $IRODS_USER:$IRODS_USER -R /etc/grid-security
+yes $IRODS_PASS | sudo -S echo "test"
+touch /tmp/answers
+
+# # Launch irods after install
+# yes $IRODS_PASS | sudo -S /etc/init.d/irods start
 
 ################################
 ## Create and sign a user certificate on the iRODS server side
 
 ## Authority: there should be already one, see:
 # grid-default-ca
+echo "1" > /tmp/answers
+sudo grid-ca-create -noint -dir /etc/grid-security/simpleca
+sudo mkdir -p /var/lib/globus
+sudo ln -s /etc/grid-security/simpleca /var/lib/globus/simple_ca
+sudo grid-default-ca < /tmp/answers
 
-# create certificate for user guest
-echo "$GSI_USER" > /tmp/answers
-sudo su $GSI_USER -c "grid-cert-request -nopw < /tmp/answers"
-# sign the certificate
-certdir="/home/$GSI_USER/.globus"
-sudo grid-ca-sign -in $certdir/usercert_request.pem -out $certdir/usercert.pem
+################################
+## Host certificates
+echo "y" > /tmp/answers
+sudo grid-cert-request -host $HOSTNAME -force < /tmp/answers
+echo "globus" > /tmp/answers
+sudo grid-ca-sign -dir /etc/grid-security/simpleca \
+        -in /etc/grid-security/hostcert_request.pem \
+        -out /etc/grid-security/hostcert.pem < /tmp/answers
 
-# Note: the certificate is created inside the shared volume
-# with the full path '/home/$USER/.globus/usercert_request.pem'
+################################
+## Fix volume permissions for irods/gsi
+sudo chown $IRODS_USER:$IRODS_USER -R /etc/grid-security
 
-# Check certificate
-echo "Check certificate"
-sudo su $GSI_USER -c "openssl x509 -in ~/.globus/usercert.pem -noout -subject"
-sleep 3
+#########################################################
+## CERTIFICATES
+certdir="/opt/certificates"
+mkdir -p $certdir && sudo chown $IRODS_USER /opt/certificates
 
-# ADD USER
-iadmin mkuser $GSI_USER rodsuser
-iadmin aua guest "$(openssl x509 -in $certdir/usercert.pem -noout -subject | sed 's/subject= //')"
+# Copy current certification authority for other containers
+cadir="$certdir/caauth"
+if [ ! -d "$cadir" ]; then
+    sudo rm -rf $cadir && rsync -avq /etc/grid-security/certificates/ $cadir
+    echo "Saved auth for outside containers"
+fi
 
-echo "Check users and certificates"
-iadmin lua
-sleep 3
+# Add a guest user for GSI certificates
+rm -rf /opt/certificates/$GSI_USER \
+    && /addusercert $GSI_USER
+rm -rf /opt/certificates/$GSI_ADMIN \
+    && /addusercert $GSI_ADMIN && iadmin moduser $GSI_ADMIN type rodsadmin
+
+# Fix certificate permissions:
+# they have to be owned by the same only user who asks as a client
+sudo chown -R $UID:$GROUPS $certdir

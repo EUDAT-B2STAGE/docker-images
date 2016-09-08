@@ -8,7 +8,8 @@ fi
 GSI_USER="$1"
 yes $IRODS_PASS | sudo -S echo "Privilege acquired"
 cd /tmp
-sudo chown -R $IRODS_USER /opt
+echo "globus" > /tmp/answers
+# sudo chown -R $IRODS_USER /opt
 
 ################################
 ## Create and sign a user certificate on the iRODS server side
@@ -35,7 +36,8 @@ fi
 # Sign the certificate
 certin="$certdir/usercert_request.pem"
 certout="$certdir/usercert.pem"
-sudo nohup grid-ca-sign -in $certin -out $certout
+sudo nohup grid-ca-sign \
+    -in $certin -out $certout < /tmp/answers
 out=`ls $certout`
 status="$?"
 clear
@@ -52,6 +54,7 @@ fi
 echo "Check certificate:"
 openssl x509 -in $certout -noout -subject
 sleep 2
+sudo chown -R $GSI_USER $certdir
 
 ################################
 # ADD USER

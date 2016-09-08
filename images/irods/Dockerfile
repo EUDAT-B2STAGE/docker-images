@@ -18,7 +18,8 @@ RUN apt-get update -qq && \
 # Add all of the irods/globus/gsi dependencies
 ENV GLOBUSFTP http://toolkit.globus.org/ftppub/gt6/installers
 ENV GLOBUSGSIDEB $GLOBUSFTP/repo/globus-toolkit-repo_latest_all.deb
-RUN wget -q $GLOBUSGSIDEB && dpkg -i globus-*repo*.deb && \
+RUN echo "install libs" && \
+    wget -q $GLOBUSGSIDEB && dpkg -i globus-*repo*.deb && \
     apt-get update -qq && \
     apt-get install -y \
     # base libs
@@ -30,8 +31,8 @@ RUN wget -q $GLOBUSGSIDEB && dpkg -i globus-*repo*.deb && \
     # gsi irods plugin dependencies
     libglobus-gssapi-gsi4 libglobus-gss-assist3 \
     # globus and proxy
-    globus-proxy-utils globus-simple-ca \
-#    globus-gsi globus-gridftp globus-gsi-cert-utils-progs \
+    globus-proxy-utils globus-gsi-cert-utils-progs globus-simple-ca \
+#    globus-gsi globus-gridftp \
     # CLEAN \
     && apt-get clean autoclean && apt-get autoremove -y && \
     rm -rf /var/lib/cache /var/lib/log
@@ -41,7 +42,9 @@ RUN wget -q $GLOBUSGSIDEB && dpkg -i globus-*repo*.deb && \
 # IRODS icat server
 # install instructions: https://docs.irods.org/4.1.5/manual/installation
 WORKDIR /tmp
-ENV IRODS4VERSION 1.9
+ENV IRODS4VERSION 1.8
+## BAD NEWS: iRODS GSI plugin does not install with iCAT 4.1.9 !!!
+# ENV IRODS4VERSION 1.9
 ENV IRODSVERSION 4.$IRODS4VERSION
 # note: there is no releases for ubuntu 16 at the moment...?
 ENV OSVERSION ubuntu14

@@ -17,3 +17,4 @@ echo '$ http GET $SERVER/api/status | jq "."'
 echo ""
 echo "- Query a protected endpoint by passing the saved token"
 echo '$ http GET $SERVER/auth/profile "$AUTH"'
+echo ""
