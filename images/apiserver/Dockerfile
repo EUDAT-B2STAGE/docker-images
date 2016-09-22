@@ -1,14 +1,26 @@
 
 FROM pdonorio/py3api
+# FROM eudatb2safe/apiclient
 MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@cineca.it>"
+
+# # Install dependencies
+# RUN apk add \
+#     # needed by icommands
+#     libfuse2 \
+#     # requested for openssl in python
+#     libffi-dev \
+#     # globus and grid-ftp utils
+#     globus-proxy-utils globus-simple-ca \
+#     # CLEAN
+#     && rm -rf /var/cache/apk/*
 
 ENV GLOBUSFTP http://toolkit.globus.org/ftppub/gt6/installers
 ENV GLOBUSGSIDEB $GLOBUSFTP/repo/globus-toolkit-repo_latest_all.deb
 
-# Install dependencies
+# Install dependencies
 RUN apt-get update -qq && \
     apt-get install -y \
-    # base utils
+    # base utils
     nano vim \
     # needed by icommands
     libfuse2 \
@@ -16,7 +28,9 @@ RUN apt-get update -qq && \
     libffi-dev \
     # globus and grid-ftp utils
     globus-proxy-utils globus-simple-ca \
-    # CLEAN
+    # proxy for certificates
+    myproxy \
+    # CLEAN
     && apt-get clean autoclean && apt-get autoremove -y && \
     rm -rf /var/lib/cache /var/lib/log
 
@@ -28,11 +42,14 @@ RUN pip3 install --upgrade \
 # IRODS
 
 # Environments
-ENV IRODSVERSION 4.1.8
+ENV IRODS4VERSION 1.8
+# ENV IRODS4VERSION 1.9
+ENV IRODSVERSION 4.$IRODS4VERSION
+ENV OSVERSION ubuntu14
 ENV IRODSFTP "ftp://ftp.renci.org/pub/irods"
-ENV IRODSRELEASES "$IRODSFTP/releases/$IRODSVERSION/ubuntu14"
+ENV IRODSRELEASES "$IRODSFTP/releases/$IRODSVERSION/$OSVERSION"
 ENV IRODSPKG "icommands"
-ENV IRODSDEB $IRODSRELEASES/irods-${IRODSPKG}-${IRODSVERSION}-ubuntu14-x86_64.deb
+ENV IRODSDEB $IRODSRELEASES/irods-${IRODSPKG}-${IRODSVERSION}-${OSVERSION}-x86_64.deb
 
 # Icommands
 WORKDIR /tmp
@@ -47,22 +64,17 @@ RUN wget -q $IRODSDEB \
 ## Fix the gsi missing library.
 # (Error: errno [] -- message [shared library does not exist [/var/lib/irods/plugins/auth/libgsi.so]])
 
-ENV GSIVERSION "1.2"
+# # compatible with 4.1.8
+ENV GSIVERSION 1.2
+# # compatible with 4.1.9
+# ENV GSIVERSION 1.3
 ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/$GSIVERSION"
 # ENV SLIBS /sharedlibs
 # RUN mkdir $SLIBS
-RUN wget $IRODSGSI/irods-auth-plugin-gsi-${GSIVERSION}-ubuntu14-x86_64.deb \
+RUN wget $IRODSGSI/irods-auth-plugin-gsi-${GSIVERSION}-${OSVERSION}-x86_64.deb \
     && ar vx irods-auth*.deb \
     && tar xf data.tar.xz -C / \
     && rm -rf *
-
-## A PAST SOLUTION
-# # Use ldconfig to apply this lib to the system
-# #http://codeyarns.com/2014/01/14/how-to-add-library-directory-to-ldconfig-cache/
-
-# RUN echo "# irods gsi libs\n$SLIBS/var/lib/irods/plugins/auth" \
-#     > /etc/ld.so.conf.d/irods.conf \
-#     && /sbin/ldconfig
 
 ###############################
 ## ADD USERS
@@ -84,6 +96,6 @@ RUN useradd -ms /bin/bash $GSI_ADMIN
 
 ###############################
 # Go online as the same irods user
-RUN echo "echo 'Run Flask server with the command:'\necho '$ ./boot devel'\necho ''\necho 'Run only basic tests with $ nose2 -F test.base'\necho 'or custom with $ nose2 -F test.custom'" \
+RUN echo "echo '\nRun Flask server with the command:'\necho '$ ./boot devel'\necho ''\necho 'Run tests with $ nose2 -F [test.FOLDER]'\n" \
     >> /home/$IRODS_USER/.bashrc
 USER $IRODS_USER
