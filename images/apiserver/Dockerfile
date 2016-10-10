@@ -38,6 +38,10 @@ RUN apt-get update -qq && \
 RUN pip3 install --upgrade \
     pyopenssl flask-oauthlib
 
+# ADD extra services for other purpose
+RUN pip3 install \
+    https://github.com/mdantonio/PyVCF/archive/master.zip
+
 ###############################
 # IRODS
 
