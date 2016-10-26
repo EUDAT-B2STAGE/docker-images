@@ -30,16 +30,18 @@ RUN apt-get update -qq && \
     globus-proxy-utils globus-simple-ca \
     # proxy for certificates
     myproxy \
+    # nginx for uwsgi
+    nginx \
     # CLEAN
     && apt-get clean autoclean && apt-get autoremove -y && \
     rm -rf /var/lib/cache /var/lib/log
 
 # ADD services which are not so common
 RUN pip3 install --upgrade \
-    pyopenssl flask-oauthlib
-
-# ADD extra services for other purpose
-RUN pip3 install \
+    pyopenssl flask-oauthlib \
+    # necessary to use uwsgi
+    uwsgi uwsgitop \
+    # ADD extra services for other purpose
     https://github.com/mdantonio/PyVCF/archive/master.zip
 
 ###############################
@@ -96,7 +98,15 @@ RUN useradd -ms /bin/bash $GSI_ADMIN
 ###############################
 ## OTHERS SERVICES
 
-# Nothing for now
+# UWSGI
+ENV UWSGI_LOGS /var/log/uwsgi
+ENV UWSGI_RUN /var/run/uwsgi
+RUN mkdir -p $UWSGI_LOGS
+RUN mkdir -p $UWSGI_RUN
+RUN chown -R www-data:www-data $UWSGI_LOGS $UWSGI_RUN
+ADD init.sh /usr/sbin/init
+# CMD ["/usr/sbin/init"]
+CMD ["sleep", "infinity"]
 
 ###############################
 # Go online as the same irods user
