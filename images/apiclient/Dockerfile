@@ -29,7 +29,9 @@ RUN adduser -s $GUEST_SHELL -u $GUEST_UID -D -h /home/$GUEST_USER $GUEST_USER
 
 # Use the new user
 USER $GUEST_USER
-RUN echo -e "echo '\nSet your client with:'\necho '$ . /tmp/gettoken'\n\n" \
-    >> /home/$GUEST_USER/.bashrc
+ENV BASHRC
+RUN echo "export HISTCONTROL=ignoreboth:erasedups" > $BASHRC \
+    && echo "echo '\\nSet your client with:'" >> $BASHRC \
+    && echo "echo '$ . /tmp/gettoken'" >> $BASHRC
 ENV PAGER less
 ENV TERM xterm

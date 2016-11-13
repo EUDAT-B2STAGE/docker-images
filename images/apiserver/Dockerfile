@@ -38,6 +38,8 @@ RUN apt-get update -qq && \
 
 # ADD services which are not so common
 RUN pip3 install --upgrade \
+    # class as easy store of attributes
+    attrs \
     pyopenssl flask-oauthlib \
     # necessary to use uwsgi
     uwsgi uwsgitop \
@@ -70,7 +72,7 @@ RUN wget -q $IRODSDEB \
 ## Fix the gsi missing library.
 # (Error: errno [] -- message [shared library does not exist [/var/lib/irods/plugins/auth/libgsi.so]])
 
-# # compatible with 4.1.8
+# compatible with 4.1.8
 ENV GSIVERSION 1.2
 # # compatible with 4.1.9
 # ENV GSIVERSION 1.3
