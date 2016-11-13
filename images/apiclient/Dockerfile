@@ -28,8 +28,8 @@ ENV GUEST_UID 1000
 RUN adduser -s $GUEST_SHELL -u $GUEST_UID -D -h /home/$GUEST_USER $GUEST_USER
 
 # Use the new user
-USER $GUEST_USER /home/$GUEST_USER/.bashrc
-ENV BASHRC
+USER $GUEST_USER
+ENV BASHRC /home/$GUEST_USER/.bashrc
 RUN echo "export HISTCONTROL=ignoreboth:erasedups" > $BASHRC \
     && echo "echo '\\nSet your client with:'" >> $BASHRC \
     && echo "echo '$ . /tmp/gettoken'" >> $BASHRC
