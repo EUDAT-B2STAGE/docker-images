@@ -37,9 +37,12 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/cache /var/lib/log
 
 # ADD services which are not so common
-RUN pip3 install --upgrade \
+RUN pip3 install --upgrade pip \
     # class as easy store of attributes
     attrs \
+    # latest restful because the stable release is pretty outdated
+    git+https://github.com/flask-restful/flask-restful@master \
+    # authentication helpers
     pyopenssl flask-oauthlib \
     # necessary to use uwsgi
     uwsgi uwsgitop \
@@ -50,8 +53,8 @@ RUN pip3 install --upgrade \
 # IRODS
 
 # Environments
+# ENV IRODS4VERSION 1.10
 ENV IRODS4VERSION 1.8
-# ENV IRODS4VERSION 1.9
 ENV IRODSVERSION 4.$IRODS4VERSION
 ENV OSVERSION ubuntu14
 ENV IRODSFTP "ftp://ftp.renci.org/pub/irods"
@@ -74,8 +77,8 @@ RUN wget -q $IRODSDEB \
 
 # compatible with 4.1.8
 ENV GSIVERSION 1.2
-# # compatible with 4.1.9
-# ENV GSIVERSION 1.3
+# # compatible with 4.1.10
+# ENV GSIVERSION 1.4
 ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/$GSIVERSION"
 # ENV SLIBS /sharedlibs
 # RUN mkdir $SLIBS
