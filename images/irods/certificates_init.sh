@@ -12,6 +12,8 @@ touch /tmp/answers
 ################################
 ## Create and sign a user certificate on the iRODS server side
 
+## IF NOT EXISTS
+
 ## Authority: there should be already one, see:
 # grid-default-ca
 
@@ -20,6 +22,9 @@ touch /tmp/answers
 # sudo mkdir -p /var/lib/globus
 # sudo ln -s /etc/grid-security/simpleca /var/lib/globus/simple_ca
 # sudo grid-default-ca < /tmp/answers
+
+## IF EXISTS
+sudo ln -s /var/lib/globus/simple_ca /etc/grid-security/simpleca
 
 ################################
 ## Host certificates
