@@ -40,21 +40,20 @@ RUN echo "install libs" && \
 
 ##########################################################################
 # IRODS icat server
-# install instructions: https://docs.irods.org/4.1.5/manual/installation
+# install instructions: https://docs.irods.org/4.1.10/manual/installation
 WORKDIR /tmp
-ENV IRODS4VERSION 1.8
-## BAD NEWS: iRODS GSI plugin does not install with iCAT 4.1.9 !!!
-# ENV IRODS4VERSION 1.9
+ENV IRODS4VERSION 1.10
 ENV IRODSVERSION 4.$IRODS4VERSION
-# note: there is no releases for ubuntu 16 at the moment...?
 ENV OSVERSION ubuntu14
+# note: there is no releases for ubuntu 16 at the moment...
 # ENV OSVERSION ubuntu16
+
 ENV IRODSFTP "ftp://ftp.renci.org/pub/irods"
 ENV IRODSRELEASES "$IRODSFTP/releases/$IRODSVERSION/$OSVERSION"
 
 RUN wget -q $IRODSRELEASES/irods-icat-${IRODSVERSION}-${OSVERSION}-x86_64.deb
 RUN wget -q $IRODSRELEASES/irods-database-plugin-postgres-${IRODS4VERSION}-${OSVERSION}-x86_64.deb
-ENV GSIVERSION 1.2
+ENV GSIVERSION 1.4
 ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/${GSIVERSION}"
 ENV IRODSGSI_DEB /tmp/gsi.deb
 RUN wget -q $IRODSGSI/irods-auth-plugin-gsi-${GSIVERSION}-${OSVERSION}-x86_64.deb -O $IRODSGSI_DEB

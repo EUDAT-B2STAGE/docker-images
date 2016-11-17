@@ -53,8 +53,8 @@ RUN pip3 install --upgrade pip \
 # IRODS
 
 # Environments
-# ENV IRODS4VERSION 1.10
-ENV IRODS4VERSION 1.8
+ENV IRODS4VERSION 1.10
+# ENV IRODS4VERSION 1.8
 ENV IRODSVERSION 4.$IRODS4VERSION
 ENV OSVERSION ubuntu14
 ENV IRODSFTP "ftp://ftp.renci.org/pub/irods"
@@ -75,10 +75,10 @@ RUN wget -q $IRODSDEB \
 ## Fix the gsi missing library.
 # (Error: errno [] -- message [shared library does not exist [/var/lib/irods/plugins/auth/libgsi.so]])
 
-# compatible with 4.1.8
-ENV GSIVERSION 1.2
-# # compatible with 4.1.10
-# ENV GSIVERSION 1.4
+# # compatible with 4.1.8
+# ENV GSIVERSION 1.2
+# compatible with 4.1.10
+ENV GSIVERSION 1.4
 ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/$GSIVERSION"
 # ENV SLIBS /sharedlibs
 # RUN mkdir $SLIBS
