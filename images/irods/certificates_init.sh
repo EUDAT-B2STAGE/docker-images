@@ -14,11 +14,12 @@ touch /tmp/answers
 
 ## Authority: there should be already one, see:
 # grid-default-ca
-echo "1" > /tmp/answers
-sudo grid-ca-create -noint -dir /etc/grid-security/simpleca
-sudo mkdir -p /var/lib/globus
-sudo ln -s /etc/grid-security/simpleca /var/lib/globus/simple_ca
-sudo grid-default-ca < /tmp/answers
+
+# echo "1" > /tmp/answers
+# sudo grid-ca-create -noint -dir /etc/grid-security/simpleca
+# sudo mkdir -p /var/lib/globus
+# sudo ln -s /etc/grid-security/simpleca /var/lib/globus/simple_ca
+# sudo grid-default-ca < /tmp/answers
 
 ################################
 ## Host certificates
