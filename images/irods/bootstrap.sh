@@ -1,6 +1,18 @@
 #!/bin/bash
 
 ##########################################
+## CHECK if installation was enabled
+if [ ! -f "/etc/irods/service_account.config" ]; then
+    echo ""
+    echo "FATAL: missing configuration files!"
+    echo ""
+    echo "Did you properly install iRODS?"
+    echo "Please run the init phase, e.g."
+    echo "$ ./do init"
+    echo ""
+fi
+
+##########################################
 ## BOOT UP
 source ~/.bashrc
 

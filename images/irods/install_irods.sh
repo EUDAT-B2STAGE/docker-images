@@ -2,6 +2,10 @@
 
 paths="/home/$IRODS_USER /etc/$IRODS_USER /var/lib/$IRODS_USER /etc/grid-security"
 
+#############################
+# Install irods&friends     #
+#############################
+
 ########################################################
 yes $IRODS_PASS | sudo -S echo "Enabling priviledges"
 
@@ -67,13 +71,22 @@ if [ "$?" -ne 0 ]; then
     echo "as irods configuration need to be validated online..."
     exit 1
 else
+
+    #############################
+    # Certifications            #
+    #############################
+    /init_certificates
+
+    #############################
+    # B2SAFE?                   #
+    #############################
 	if [ -f $EXTRA_INSTALLATION_SCRIPT ]; then
 		echo "Executing: extra configuration"
 		$EXTRA_INSTALLATION_SCRIPT
 	fi
-    echo "Connected"
 fi
 
-#########################################################
-# Remove tmp
+################################
+# Cleanup
+echo "All done. Cleaning..."
 sudo rm -rf /tmp/*

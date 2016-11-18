@@ -59,10 +59,10 @@ ENV IRODSGSI_DEB /tmp/gsi.deb
 RUN wget -q $IRODSGSI/irods-auth-plugin-gsi-${GSIVERSION}-${OSVERSION}-x86_64.deb -O $IRODSGSI_DEB
 
 ##########################################################################
-# install scripts
+# install scripts: to be executed only the first time
 ADD expect_irods.sh /tmp/expect_irods
-ADD install_irods.sh /install
-# boot up script
+ADD install_irods.sh /init
+# normal boot up script
 ADD bootstrap.sh /bootup
 CMD ["/bootup"]
 
@@ -116,7 +116,7 @@ ADD handlepassw.sh /pass
 
 # irods user setup
 ENV IRODS_HOST rodserver
-ADD certificates_init.sh /init
+ADD certificates_init.sh /init_certificates
 EXPOSE 1247
 
 # Various

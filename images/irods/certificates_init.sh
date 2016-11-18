@@ -1,13 +1,11 @@
 #!/bin/bash
 
-# Install irods&friends
-/install
-
-yes $IRODS_PASS | sudo -S echo "test"
+################################
+# Init all internal certificates for development
 touch /tmp/answers
 
-# # Launch irods after install
-# yes $IRODS_PASS | sudo -S /etc/init.d/irods start
+# acquire privileges
+yes $IRODS_PASS | sudo -S echo "certificates"
 
 ################################
 ## Create and sign a user certificate on the iRODS server side
@@ -54,8 +52,10 @@ fi
 # Add a guest user for GSI certificates
 rm -rf /opt/certificates/$GSI_USER \
     && /addusercert $GSI_USER
+## Exit if error??
 rm -rf /opt/certificates/$GSI_ADMIN \
     && /addusercert $GSI_ADMIN && iadmin moduser $GSI_ADMIN type rodsadmin
+## Exit if error??
 
 # Fix certificate permissions:
 # they have to be owned by the same only user who asks as a client

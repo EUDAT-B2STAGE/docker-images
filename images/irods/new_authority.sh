@@ -53,6 +53,7 @@ fi
 # Check certificate
 echo "Check certificate:"
 openssl x509 -in $certout -noout -subject
+if [ "$?" != "0" ]; then exit 1; fi
 sleep 2
 sudo chown -R $GSI_USER $certdir
 

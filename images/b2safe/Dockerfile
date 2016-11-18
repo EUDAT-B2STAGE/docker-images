@@ -43,6 +43,13 @@ ENV EUDAT_CONFIGF /tmp/eudat.conf
 ADD myeudat.conf $EUDAT_CONFIGF
 ADD install_eudat.sh $EXTRA_INSTALLATION_SCRIPT
 
+# Add certification authorities
+ADD b2access.ca.dev.pem /tmp/
+ADD b2access.ca.dev.signing_policy /tmp/
+USER root
+RUN chown -R $IRODS_USER:$IRODS_USER /tmp/*
+USER $IRODS_USER
+
 # Save resources and eudat configurations
 VOLUME /opt
 

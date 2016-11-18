@@ -57,13 +57,30 @@ rm $PASSFILE
 
 # Check scripts
 cd /opt/eudat/b2safe/cmd
-./authZmanager.py -h
-./epicclient.py --help
-./logmanager.py -h
-./messageManager.py -h
-./metadataManager.py -h
+nohup ./authZmanager.py -h \
+    && nohup ./epicclient.py --help \
+    && nohup ./logmanager.py -h \
+    && nohup ./messageManager.py -h \
+    && nohup ./metadataManager.py -h \
+    && echo "EUDAT setup completed"
 
-# Cleanup
-echo "Cleaning"
-sudo rm -rf /tmp/*
-echo "EUDAT setup completed"
+################################
+## Add and validate the B2ACCESS certification authority
+cadir="/opt/certificates/caauth"
+# echo "LET'S TRY"
+# sleep 3
+
+## DEV
+cp /tmp/b2access.ca.dev.* $cadir/
+cd /opt/certificates/caauth
+caid=$(openssl x509 -in b2access.ca.dev.pem -hash -noout)
+echo "Label is $caid"
+mv b2access.ca.dev.pem ${caid}.0
+mv b2access.ca.dev.signing_policy ${caid}.signing_policy
+sudo chown -R irods:irods /opt/certificates /tmp/*
+cp /opt/certificates/caauth/$caid* /etc/grid-security/certificates/
+
+## PROD
+
+# to do...
+# sleep 20
