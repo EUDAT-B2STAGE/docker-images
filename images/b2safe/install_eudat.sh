@@ -70,17 +70,24 @@ cadir="/opt/certificates/caauth"
 # echo "LET'S TRY"
 # sleep 3
 
+cd $cadir
+
 ## DEV
 cp /tmp/b2access.ca.dev.* $cadir/
-cd /opt/certificates/caauth
 caid=$(openssl x509 -in b2access.ca.dev.pem -hash -noout)
-echo "Label is $caid"
+echo "B2ACCESS CA [dev]: label is $caid"
 mv b2access.ca.dev.pem ${caid}.0
 mv b2access.ca.dev.signing_policy ${caid}.signing_policy
 sudo chown -R irods:irods /opt/certificates /tmp/*
-cp /opt/certificates/caauth/$caid* /etc/grid-security/certificates/
+cp $cadir/$caid* /etc/grid-security/certificates/
 
 ## PROD
+cp /tmp/b2access.ca.prod.* $cadir/
+caid=$(openssl x509 -in b2access.ca.prod.pem -hash -noout)
+echo "B2ACCESS CA [prod]: label is $caid"
+mv b2access.ca.prod.pem ${caid}.0
+mv b2access.ca.prod.signing_policy ${caid}.signing_policy
+sudo chown -R irods:irods /opt/certificates /tmp/*
+cp $cadir/$caid* /etc/grid-security/certificates/
 
-# to do...
-# sleep 20
+echo "Certification authorities enabled"
