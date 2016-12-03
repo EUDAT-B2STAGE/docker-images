@@ -42,6 +42,8 @@ RUN pip3 install --upgrade pip \
     attrs \
     # latest restful because the stable release is pretty outdated
     git+https://github.com/flask-restful/flask-restful@master \
+    # swagger integration
+    git+https://github.com/gangverk/flask-swagger.git@master \
     # authentication helpers
     pyopenssl flask-oauthlib \
     # necessary to use uwsgi
