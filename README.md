@@ -5,9 +5,10 @@ Images for running EUDAT services inside Docker containers.
 
 ## Hub
 
-The public repo on the Docker Hub web site is available at the address:
+Public repos @DockerHub web site is available at the addresses:
 
 https://hub.docker.com/u/eudatb2safe/
+https://hub.docker.com/u/eudatb2stage/
 
 ## Docs
 

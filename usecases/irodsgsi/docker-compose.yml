@@ -13,7 +13,7 @@ sql:
 #################################
 # iRODS iCAT server for EUDAT B2safe
 icat:
-  image: irodsgsiserver
+  image: pdonorio/gsi-irods-server
   # command: sleep infinity
   hostname: rodserver
   volumes:
