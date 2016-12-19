@@ -1,0 +1,42 @@
+
+#################################
+# Postgres database server
+sql:
+  image: postgres
+  volumes:
+    - gsi_sqldata:/var/lib/postgresql/data
+  environment:
+    POSTGRES_USER: irods
+    POSTGRES_PASSWORD: icatserver
+    POSTGRES_DB: ICAT
+
+#################################
+# iRODS iCAT server for EUDAT B2safe
+icat:
+  image: irodsgsiserver
+  # command: sleep infinity
+  hostname: rodserver
+  volumes:
+    - gsi_etcconf:/etc
+    - gsi_irodshome:/home/irods
+    - gsi_irodsvar:/var/lib/irods
+    - gsi_eudatopt:/opt
+    - gsi_sharedcerts:/opt/certificates
+    - ./gsi_compiled.sh:/compile.sh
+  links:
+    - sql:db
+
+#################################
+# Write irods python client
+pyirods:
+  image: pdonorio/gsi-python-client
+  command: sleep infinity
+  volumes:
+  - gsi_sharedcerts:/opt/certificates
+  - /Users/projects/restapi/pyirods:/code
+  # THIS LINE ABOVE SHOULD MATCH THE ROOT DIR
+  # WHERE YOU ARE DEVELOPING PYTHON IRODS FOR GSI PLUGIN
+  hostname:
+    pyirods
+  links:
+    - icat:rodserver
