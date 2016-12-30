@@ -37,13 +37,15 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/cache /var/lib/log
 
 # ADD services which are not so common
-RUN pip3 install --upgrade pip \
+RUN pip3 install --no-cache-dir --upgrade pip \
     # class as easy store of attributes
     attrs \
     # latest restful because the stable release is pretty outdated
     git+https://github.com/flask-restful/flask-restful@master \
-    # swagger integration
-    git+https://github.com/gangverk/flask-swagger.git@master \
+    # # swagger integration
+    # git+https://github.com/gangverk/flask-swagger.git@master \
+    # swagger validation
+    bravado_core \
     # authentication helpers
     pyopenssl flask-oauthlib \
     # necessary to use uwsgi
