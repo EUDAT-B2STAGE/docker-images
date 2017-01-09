@@ -9,7 +9,8 @@ RUN apt-get update && \
         libglobus-gssapi-gsi-dev globus-proxy-utils \
         telnet vim \
         python-gssapi python-prettytable python-pip \
-    && pip install beeprint \
+    && pip install --upgrade --no-cache-dir pip \
+        beeprint xmlrunner \
     && mkdir /code
 
 ADD gsi.conf /etc/gss/mech.d/gsi.conf
