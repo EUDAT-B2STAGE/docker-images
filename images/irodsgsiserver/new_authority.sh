@@ -60,6 +60,7 @@ sudo chown -R $GSI_USER $certdir
 ################################
 # ADD USER
 iadmin mkuser $GSI_USER rodsuser
+iadmin moduser $GSI_USER password $IRODS_PASS
 iadmin aua $GSI_USER \
     "$(openssl x509 -in $certout -noout -subject | sed 's/subject= //')"
 echo "Added certificate for user '$GSI_USER' to irods authorizations"
