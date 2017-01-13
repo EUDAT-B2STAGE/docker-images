@@ -34,4 +34,5 @@ RUN echo "export HISTCONTROL=ignoreboth:erasedups" > $BASHRC \
     && echo "echo -e '\\nSet up this client with the command:'" >> $BASHRC \
     && echo "echo -e '$ . /tmp/gettoken\\n'" >> $BASHRC
 ENV PAGER less
-ENV TERM xterm
+# ENV TERM=xterm
+ENV TERM=xterm-256color
