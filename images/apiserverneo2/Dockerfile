@@ -1,58 +1,27 @@
-
 FROM pdonorio/py3api
-# FROM eudatb2safe/apiclient
 MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@cineca.it>"
-
-# # Install dependencies
-# RUN apk add \
-#     # needed by icommands
-#     libfuse2 \
-#     # requested for openssl in python
-#     libffi-dev \
-#     # globus and grid-ftp utils
-#     globus-proxy-utils globus-simple-ca \
-#     # CLEAN
-#     && rm -rf /var/cache/apk/*
 
 ENV GLOBUSFTP http://toolkit.globus.org/ftppub/gt6/installers
 ENV GLOBUSGSIDEB $GLOBUSFTP/repo/globus-toolkit-repo_latest_all.deb
 
 # Install dependencies
-RUN apt-get update -qq && \
-    apt-get install -y \
-    # base utils
-    nano vim \
-    # needed by icommands
-    libfuse2 \
+RUN apt-get update -qq && apt-get install -y \
+    # globus and grid-ftp utils
+    globus-proxy-utils globus-simple-ca myproxy \
     # requested for openssl in python
     libffi-dev \
-    # globus and grid-ftp utils
-    globus-proxy-utils globus-simple-ca \
-    # proxy for certificates
-    myproxy \
-    # nginx for uwsgi
-    nginx \
+    # needed by icommands; NOTE: TO BE REMOVED
+    libfuse2 \
     # CLEAN
     && apt-get clean autoclean && apt-get autoremove -y && \
     rm -rf /var/lib/cache /var/lib/log
 
 # ADD services which are not so common
-RUN pip3 install --upgrade pip \
-    # class as easy store of attributes
-    attrs \
-    # latest restful because the stable release is pretty outdated
-    git+https://github.com/flask-restful/flask-restful@master \
-    # # swagger integration
-    # git+https://github.com/gangverk/flask-swagger.git@master \
-    # swagger validation
-    bravado_core \
-    # authentication helpers
-    pyopenssl flask-oauthlib \
-    # necessary to use uwsgi
-    uwsgi uwsgitop \
+RUN pip3 install --no-cache-dir --upgrade pip \
     # block this library to neo4j 2 (neomodel2 with py2neo)
     py2neo==2.0.9 neomodel==2.0.2  \
-    # ADD extra services for other purpose
+    ###########################
+    # Extra services for other purpose
     https://github.com/mdantonio/PyVCF/archive/master.zip
 
 ###############################
@@ -70,16 +39,14 @@ ENV IRODSDEB $IRODSRELEASES/irods-${IRODSPKG}-${IRODSVERSION}-${OSVERSION}-x86_6
 
 # Icommands
 WORKDIR /tmp
-
-RUN wget -q $IRODSDEB \
-    && dpkg -i irods*.deb \
-    && rm *.deb
+RUN wget -q $IRODSDEB && dpkg -i irods*.deb && rm *.deb
 # # Example for environment
 # http://j.mp/1RmGmWD
 
 ###############################
 ## Fix the gsi missing library.
-# (Error: errno [] -- message [shared library does not exist [/var/lib/irods/plugins/auth/libgsi.so]])
+# (Error: errno [] -- message [shared library does not exist
+# [/var/lib/irods/plugins/auth/libgsi.so]])
 
 # # compatible with 4.1.8
 # ENV GSIVERSION 1.2
@@ -89,9 +56,7 @@ ENV IRODSGSI "$IRODSFTP/plugins/irods_auth_plugin_gsi/$GSIVERSION"
 # ENV SLIBS /sharedlibs
 # RUN mkdir $SLIBS
 RUN wget $IRODSGSI/irods-auth-plugin-gsi-${GSIVERSION}-${OSVERSION}-x86_64.deb \
-    && ar vx irods-auth*.deb \
-    && tar xf data.tar.xz -C / \
-    && rm -rf *
+    && ar vx irods-auth*.deb && tar xf data.tar.xz -C / && rm -rf *
 
 ###############################
 ## ADD USERS
