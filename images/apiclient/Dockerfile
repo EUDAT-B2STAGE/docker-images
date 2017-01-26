@@ -1,21 +1,22 @@
 
-FROM alpine:edge
+FROM python:3.6-alpine
+# FROM alpine:edge
+
+MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@cineca.it>"
 # Note:
 # This is image is intended to be as small as possible
-MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@cineca.it>"
 
 RUN apk update && apk upgrade && apk add \
-    python3 jq\
-    bash vim curl wget less \
+    bash vim curl wget less jq \
+    # python3 \
     && rm -rf /var/cache/apk/*
 
-# Install easy install
-ENV EASY_REPO https://bootstrap.pypa.io/ez_setup.py
-RUN curl $EASY_REPO | python3
+# Install pip
+RUN wget -q https://bootstrap.pypa.io/get-pip.py \
+    && python3 get-pip.py && rm *.py
 
-# Install pip and pip packages
-RUN easy_install pip \
-    && pip --no-cache-dir install --upgrade \
+# Install python packages
+RUN pip --no-cache-dir install --upgrade \
     pip httpie http-prompt
 
 # Create a token from API

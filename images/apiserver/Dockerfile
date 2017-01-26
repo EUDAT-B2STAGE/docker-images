@@ -17,7 +17,7 @@ RUN apt-get update -qq && apt-get install -y \
     rm -rf /var/lib/cache /var/lib/log
 
 # ADD services which are not so common
-RUN pip3 install --no-cache-dir --upgrade pip \
+RUN pip install --no-cache-dir --upgrade pip \
     # block this library to the last version working for neo4j 3
     # (neomodel2 without py2neo)
     neomodel==3.0.3  \
