@@ -1,6 +1,7 @@
 
 if [ -z "$CREDENTIALS" ]; then
     echo "No credentials provided via environment!"
+    echo "Please set the variable \$CREDENTIALS"
     return
 fi
 

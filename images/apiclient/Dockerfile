@@ -7,7 +7,9 @@ MAINTAINER "Paolo D'Onorio De Meo <p.donoriodemeo@cineca.it>"
 # This is image is intended to be as small as possible
 
 RUN apk update && apk upgrade && apk add \
-    bash vim curl wget less jq \
+    bash less vim \
+    curl wget git \
+    jq \
     # python3 \
     && rm -rf /var/cache/apk/*
 
@@ -17,7 +19,13 @@ RUN wget -q https://bootstrap.pypa.io/get-pip.py \
 
 # Install python packages
 RUN pip --no-cache-dir install --upgrade \
-    pip httpie http-prompt
+    pip httpie http-prompt pyyaml
+
+# Install jqt/yq
+# https://fadado.github.io/jqt/
+RUN git clone https://github.com/fadado/jqt.git /tmp/jqt \
+    && ln -s /usr/local/bin/python /usr/bin/
+ENV PATH $PATH:/tmp/jqt/bin
 
 # Create a token from API
 ADD client_init.sh /tmp/gettoken
