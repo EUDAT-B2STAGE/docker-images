@@ -18,6 +18,8 @@ RUN apt-get update -qq && apt-get install -y \
 
 # ADD services which are not so common
 RUN pip install --no-cache-dir --upgrade pip \
+    # Postgres
+    psycopg2 \
     # block this library to the last version working for neo4j 3
     # (neomodel2 without py2neo)
     neomodel==3.0.3  \
