@@ -15,6 +15,9 @@ TOKEN=`http POST $SERVER/auth/login $CREDENTIALS | jq '.Response.data.token' | t
 if [ "$TOKEN" == "" ]; then
     echo ""
     echo "Failed to connect to Flask server..."
+elif [ "$TOKEN" == "null" ]; then
+    echo ""
+    echo "Invalid credentials"
 else
     echo "Logged"
     export AUTH="Authorization:Bearer $TOKEN"
