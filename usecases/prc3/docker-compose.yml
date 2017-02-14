@@ -1,0 +1,58 @@
+
+#################################
+# Postgres database server
+sql:
+  image: postgres
+  volumes:
+    - prc3_sqldata:/var/lib/postgresql/data
+  environment:
+    POSTGRES_USER: irods
+    POSTGRES_PASSWORD: icatserver
+    POSTGRES_DB: ICAT
+
+#################################
+# iRODS iCAT server for EUDAT B2safe
+icat:
+  image: eudatb2safe/irods
+  # command: sleep infinity
+  hostname: rodserver
+  volumes:
+    - prc3_etcconf:/etc
+    - prc3_irodshome:/home/irods
+    - prc3_irodsvar:/var/lib/irods
+    - prc3_eudatopt:/opt
+    - prc3_sharedcerts:/opt/certificates
+    # - ./prc3_compiled.sh:/compile.sh
+  links:
+    - sql:db
+
+#################################
+# Original PRC
+prc2:
+  image: pdonorio/gsi-python-client
+  # command: "git clone https://github.com/irods/python-irodsclient prc2"
+  command: sleep infinity
+  volumes:
+    - prc3_sharedcerts:/opt/certificates
+    - ./prc2:/code/prc2
+  hostname: prc2
+  # working_dir: /code
+  links:
+    - icat:rodserver
+
+#################################
+# Write irods python client for Python 3
+# https://docs.python.org/2/library/2to3.html
+prc3:
+  image: eudatb2stage/prc3
+  command: sleep infinity
+  working_dir: /code
+  volumes:
+    - prc3_sharedcerts:/opt/certificates
+  # THIS LINE BELOW SHOULD MATCH THE ROOT DIR
+  # WHERE YOU ARE DEVELOPING PYTHON IRODS FOR PYTHON 3
+    - /tmp/PATH/TO/PYTHON-IRODSCLIENT:/code/prc3
+    # - /Users/projects/restapi/pyirods/python-irodsclient:/code/prc3
+  hostname: prc3
+  links:
+    - icat:rodserver
