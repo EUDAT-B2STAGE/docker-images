@@ -2,6 +2,9 @@
 
 ---
 
+Note:
+You must change [this line](docker.compose.yml#L54) before using the test case.
+
 STEP 1: Clone this repo and go inside the root directory
 
 ```bash
@@ -29,7 +32,7 @@ docker-compose -f docker-compose.yml -f init.yml up icat
 docker-compose up -d
 ```
 
-STEP 2: Use it
+STEP 3: Use it
 
 ```bash
 # check status
