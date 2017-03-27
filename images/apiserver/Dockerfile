@@ -20,8 +20,9 @@ RUN apt-get update -qq && apt-get install -y \
 RUN pip install --no-cache-dir --upgrade pip \
     # Postgres
     psycopg2 \
-    # block this library to the last version working for neo4j 3
-    # (neomodel2 without py2neo)
+    # b2handle
+    git+https://github.com/EUDAT-B2STAGE/B2HANDLE.git@master \
+    # neo4j
     neomodel==3.0.3  \
     ###########################
     # Extra services for other purpose
