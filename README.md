@@ -3,7 +3,7 @@
 Images for running EUDAT services inside Docker containers.
 
 
-## Hub
+## Hub
 
 Public repos @DockerHub web site is available at the addresses:
 
