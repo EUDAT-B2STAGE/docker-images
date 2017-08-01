@@ -17,7 +17,7 @@ STEP 2: Bring up the environment with Docker
 cd usecases/prc3
 
 # Clean current instances
-docker-compose stop; docker-compose rm -f
+docker-compose down -v
 
 # Get the original irods available
 git clone https://github.com/irods/python-irodsclient.git prc2
@@ -41,6 +41,17 @@ docker-compose ps
 # Jump into prc2/prc3 container
 docker-compose exec prc2 bash
 docker-compose exec prc3 bash
+# run tests:
+# cd prc/irods/test/ && python runner.py 
+```
+
+To install requirements for running tests:
+
+```bash
+for container in prc2 prc3; do
+    echo $container
+    docker-compose exec --user root $container /bin/sh -c "pip install xmlrunner"
+done
 ```
 
 To see logs in irods:

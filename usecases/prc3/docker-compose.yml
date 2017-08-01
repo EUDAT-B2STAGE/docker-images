@@ -34,7 +34,7 @@ prc2:
   command: sleep infinity
   volumes:
     - prc3_sharedcerts:/opt/certificates
-    - ./prc2:/code/prc2
+    - /Users/projects/restapi/http-api/submodules/prc:/code/prc
   hostname: prc2
   # working_dir: /code
   links:
@@ -49,10 +49,7 @@ prc3:
   working_dir: /code
   volumes:
     - prc3_sharedcerts:/opt/certificates
-  # THIS LINE BELOW SHOULD MATCH THE ROOT DIR
-  # WHERE YOU ARE DEVELOPING PYTHON IRODS FOR PYTHON 3
-    - /tmp/PATH/TO/PYTHON-IRODSCLIENT:/code/prc3
-    # - /Users/projects/restapi/pyirods/python-irodsclient:/code/prc3
+    - /Users/projects/restapi/http-api/submodules/prc:/code/prc
   hostname: prc3
   links:
     - icat:rodserver
